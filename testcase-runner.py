@@ -3,8 +3,7 @@ import subprocess
 from pathlib import Path
 
 def run_solution(command, inp_text):
-    
-    result = subprocess.run(command,
+    result= subprocess.run(command,
         input=inp_text,
         capture_output=True,
         text=True,
@@ -12,6 +11,23 @@ def run_solution(command, inp_text):
         )
     return result.stdout.strip()
 
+def find_test_cases(tests: Path):
+    in_files= sorted(tests.glob("*.in"))
+    pairs= []
+    for in_file in in_files:
+        out_file = in_file.with_suffix(".out")
+        if out_file.exists():
+            pairs.append((in_file, out_file))
+        else:
+            print(f"No matching .out file for {in_file.name}, so am skipping.")
+    return pairs
+
+def build_command(solution_path: str) -> list:
+    #check for cpp too, if you get time
+    if solution_path.endswith('.py'):
+        return ["python3",solution_path]
+    else:
+        raise ValueError("Please ensure the solution path is a python file")
 
 def main():
     l = len(sys.argv)
@@ -33,7 +49,11 @@ def main():
        sys.exit(1)
 
     #now we will use these functions
-    command = build_command(solution)
+    try:
+        command = build_command(solution)
+    except ValueError as ve:
+        print(ve)
+        sys.exit(1)
     test_cases = find_test_cases(tests)
 
     if not test_cases:
@@ -44,7 +64,7 @@ def main():
 
     for inp_file, out_file in test_cases:
         inp_text = inp_file.read_text()
-        expected = out_file.read_text()
+        expected = out_file.read_text().strip()
 
         try:
             actual = run_solution(command, inp_text)
@@ -54,7 +74,7 @@ def main():
 
         if actual== expected:
             print(f"{inp_file.name}: PASS")
-            passed+=1
+            numpassed+=1
         else:
             print(f"{inp_file.name}: FAIL")
             print(f"expected: {expected!r}")
