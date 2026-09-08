@@ -25,7 +25,7 @@ def find_test_cases(tests: Path):
 def build_command(solution_path: str) -> list:
     #check for cpp too, if you get time
     if solution_path.endswith('.py'):
-        return ["python3",solution_path]
+        return ["python",solution_path]
     else:
         raise ValueError("Please ensure the solution path is a python file")
 
