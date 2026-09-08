@@ -2,6 +2,17 @@ import sys
 import subprocess
 from pathlib import Path
 
+def run_solution(command, inp_text):
+    
+    result = subprocess.run(command,
+        input=inp_text,
+        capture_output=True,
+        text=True,
+        timeout=5,
+        )
+    return result.stdout.strip()
+
+
 def main():
     l = len(sys.argv)
     if l<2:
