@@ -76,7 +76,7 @@ This repo also includes a working example under `add_tests/` with
 python testcase_runner.py add_solution.py add_tests
 ```
 
-## Notes / limitations
+## Notes andlimitations
 
 - Cuurrently Only Python solutions are supported (the solution path must end in `.py`).
 - The runner only captures the solution's standard output. If a solution
