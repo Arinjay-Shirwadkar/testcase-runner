@@ -1,4 +1,5 @@
 import sys
+import time
 import subprocess
 from pathlib import Path
 
@@ -66,17 +67,20 @@ def main():
         inp_text = inp_file.read_text()
         expected = out_file.read_text().strip()
 
+        start = time.perf_counter()
         try:
             actual = run_solution(command, inp_text)
         except subprocess.TimeoutExpired:
-            print(f"{inp_file.name}: FAIL due to time out")
+            elapsed = time.perf_counter() - start
+            print(f"{inp_file.name}: FAIL due to time out ({elapsed:.2f}s)")
             continue
+        elapsed = time.perf_counter() - start
 
         if actual== expected:
-            print(f"{inp_file.name}: PASS")
+            print(f"{inp_file.name}: PASS ({elapsed:.2f}s)")
             numpassed+=1
         else:
-            print(f"{inp_file.name}: FAIL")
+            print(f"{inp_file.name}: FAIL ({elapsed:.2f}s)")
             print(f"expected: {expected!r}")
             print(f"got:      {actual!r}")
 
